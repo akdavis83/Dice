@@ -1,9 +1,9 @@
-threex.transparency
+#threex.transparency
 ===================
 
 threex.transparency is a [three.js games extension](http://www.threejsgames.com/extensions/) to easily handle transparency. Transparency is a tricky business in Webgl, but this extension makes it approachable. It is worth trying. Do you remember the transparency between the leaves of a tree in 3D games? Well, with this extension you will be able to add it to your own game. You can also make clouds appear transparent in the sky you have created for your game. It is easy to include and it gives a nice polish finish, a professional touch. 
 
-Show Don't Tell
+Examples:
 ===============
 * [examples/basic.html](http://jeromeetienne.github.io/threex.transparency/examples/basic.html)
 \[[view source](https://github.com/jeromeetienne/threex.transparency/blob/master/examples/basic.html)\] :

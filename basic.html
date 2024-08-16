@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<title>Dice</title>
+<link rel="icon" href="https://fav.farm/🔥" />
+<script src="vendor/three.js/build/three.min.js"></script>
+<script src="vendor/three.js/examples/js/controls/OrbitControls.js"></script>
+<script src="../threex.transparency.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Gupter:wght@400;500;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Matemasie&family=Six+Caps&family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+<style>
+	
+
+.lora-uniquifier {
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+</style>
+<body style='margin: 0px; background-color: black;'>
+	<div style="text-align: center; color: white; z-index: 1000; background-color: inherit;">
+		<h1 style="color: white; margin: 30px; z-index: 100; position: absolute; left: 300px;" class="lora-uniquifier">
+			Don't roll the dice with your future.
+		</h1>
+	</div>
+	<script>
+	var renderer	= new THREE.WebGLRenderer();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.setClearColor( 0x000000 );
+	document.body.appendChild( renderer.domElement );
+
+	var updateFcts	= [];
+	var scene	= new THREE.Scene();
+	var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100 );
+	camera.position.z = 3;
+	
+	var controls	= new THREE.OrbitControls(camera)
+	updateFcts.push(function(){
+		controls.update()
+	})
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		build the texture						//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	var url = 'images/dices-transparent.png'
+	// var url = 'images/glass-sphere-with-transparency_153267809.jpg'
+	// var url = 'images/mercury-transparent.png'
+	var texture = THREE.ImageUtils.loadTexture(url)
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		add random Planes						//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	var planes	= [];
+
+	var geometry	= new THREE.PlaneBufferGeometry(1,1)
+	var material	= new THREE.MeshBasicMaterial()
+	material.map	= texture
+	material.side	= THREE.DoubleSide
+
+	for(var i = 0; i < 10; i++){
+		var mesh	= new THREE.Mesh(geometry, material);
+		mesh.lookAt(new THREE.Vector3(0,1,0))
+		mesh.position.x = 0.1*i
+		mesh.position.y = 0.1*i
+		scene.add(mesh)	
+		planes.push(mesh)		
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Use THREEx.Transparency						//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	THREEx.Transparency.init(planes)
+	updateFcts.push(function(delta, now){
+		THREEx.Transparency.update(planes, camera)
+	})
+
+	// //////////////////////////////////////////////////////////////////////////////////
+	// //		add an cube and make it move					//
+	// //////////////////////////////////////////////////////////////////////////////////
+	// var geometry	= new THREE.BoxGeometry( 1, 1, 1);
+	// var material	= new THREE.MeshNormalMaterial();
+	// var cube	= new THREE.Mesh( geometry, material );
+	// scene.add( cube );
+	// updateFcts.push(function(delta, now){
+	// 	cube.rotation.x += 1 * delta;
+	// 	cube.rotation.y += 0.01;
+	// })
+	// 
+	// //////////////////////////////////////////////////////////////////////////////////
+	// //		add an sphere and make it move					//
+	// //////////////////////////////////////////////////////////////////////////////////
+	var geometry	= new THREE.SphereGeometry( 0.5 );
+	var material	= new THREE.MeshNormalMaterial();
+	var sphere	= new THREE.Mesh( geometry, material );
+	scene.add( sphere );
+	updateFcts.push(function(delta, now){
+		var angle	= 0.2 * now * Math.PI * 2
+		sphere.position.x	= Math.cos(angle)*3.5
+		sphere.position.z	= Math.sin(angle)*3.5
+	})
+	
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		render the scene						//
+	//////////////////////////////////////////////////////////////////////////////////
+	updateFcts.push(function(){
+		renderer.render( scene, camera );
+	})
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		loop runner							//
+	//////////////////////////////////////////////////////////////////////////////////
+	var lastTimeMsec= null
+	requestAnimationFrame(function animate(nowMsec){
+		// keep looping
+		requestAnimationFrame( animate );
+		// measure time
+		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+		lastTimeMsec	= nowMsec
+		// call each update function
+		updateFcts.forEach(function(updateFn){
+			updateFn(deltaMsec/1000, nowMsec/1000)
+		})
+	})
+</script>
+</body>
+
+<div style="text-align: center; color: white; z-index: 1000; background-color: inherit;">
+	<h1 style="text-align: center; color: blue; margin: 30px; z-index: 100;" class="lora-uniquifier">On the last day it will be too late. While you have breath in your lungs it's never too late. Today is the day of salvation, now is the season for righteousness. Tommorrow is not promised, The Lord is not slack concerning His promise, as some men count slackness; but is longsuffering to us-ward, not willing that any should perish, but that all should come to repentance. It is a gamble to think that we will be granted another day, Jesus spoke about this in a parable:The ground of a certain rich man brought forth plentifully: 17 And he thought within himself, saying, What shall I do, because I have no room where to bestow my fruits? 18 And he said, This will I do: I will pull down my barns, and build greater; and there will I bestow all my fruits and my goods. 19 And I will say to my soul, Soul, thou hast much goods laid up for many years; take thine ease, eat, drink, and be merry. 20 But God said unto him, Thou fool, this night thy soul shall be required of thee: then whose shall those things be, which thou hast provided? (Luke 12:16-20). I leave you with one final exhortation followed by one last parable about the man who neglected his salvation: </h1>
+	<h1 style="text-align: center;color: red;" class="lora-uniquifier">
+		To wit, that God was in Christ, reconciling the world unto himself, not imputing their trespasses unto them; and hath committed unto us the word of reconciliation. 20 Now then we are ambassadors for Christ, as though God did beseech you by us: we pray you in Christ’s stead, be ye reconciled to God. 21 For he hath made him to be sin for us, who knew no sin; that we might be made the righteousness of God in him.
+	</h1>
+	<h1 style="text-align: center; color: white; margin: 30px; z-index: 100;" class="lora-uniquifier">
+		19There was a certain rich man, which was clothed in purple and fine linen, and fared sumptuously every day: 20 And there was a certain beggar named Lazarus, which was laid at his gate, full of sores, 21 And desiring to be fed with the crumbs which fell from the rich man’s table: moreover the dogs came and licked his sores. 22 And it came to pass, that the beggar died, and was carried by the angels into Abraham’s bosom: the rich man also died, and was buried; 23 And in hell he lift up his eyes, being in torments, and seeth Abraham afar off, and Lazarus in his bosom. 24 And he cried and said, Father Abraham, have mercy on me, and send Lazarus, that he may dip the tip of his finger in water, and cool my tongue; for I am tormented in this flame. 25 But Abraham said, Son, remember that thou in thy lifetime receivedst thy good things, and likewise Lazarus evil things: but now he is comforted, and thou art tormented. 26 And beside all this, between us and you there is a great gulf fixed: so that they which would pass from hence to you cannot; neither can they pass to us, that would come from thence. 27 Then he said, I pray thee therefore, father, that thou wouldest send him to my father’s house: 28 For I have five brethren; that he may testify unto them, lest they also come into this place of torment. 29 Abraham saith unto him, They have Moses and the prophets; let them hear them. 30 And he said, Nay, father Abraham: but if one went unto them from the dead, they will repent. 31 And he said unto him, If they hear not Moses and the prophets, neither will they be persuaded, though one rose from the dead.
+
+	</h1>
+</div>
